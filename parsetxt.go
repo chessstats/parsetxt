@@ -41,7 +41,9 @@ func main() {
 					invalid=invalid||regexp.MustCompile("jul05").MatchString(name)
 					invalid=invalid||regexp.MustCompile("oct02").MatchString(name)
 					invalid=invalid||regexp.MustCompile("oct04").MatchString(name)
-
+					invalid=invalid||regexp.MustCompile("jul11").MatchString(name)
+					invalid=invalid||regexp.MustCompile("jan03").MatchString(name)
+					
 
 					if !invalid {
 						headm:=regexp.MustCompile(`id number`).ReplaceAllString(head,"id_number")
