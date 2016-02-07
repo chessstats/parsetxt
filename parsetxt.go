@@ -9,7 +9,7 @@ import(
 	"strings"
 )
 
-var root="..\\..\\..\\..\\..\\R\\hist_download"
+var root="hist_download"
 var croot="hist_smartconv"
 
 var gettxt=regexp.MustCompile(`\.txt|\.TXT$`)
