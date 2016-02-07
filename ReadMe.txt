@@ -1,4 +1,4 @@
-parses the Fide rating lists in text format and converts them to an R data tables
+parses the Fide rating lists in text format and converts them to R data tables
 
 #######################################
 
