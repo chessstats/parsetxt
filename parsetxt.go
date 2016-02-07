@@ -28,10 +28,22 @@ func main() {
 				fmt.Printf("processing %s\n",name)
 				txtfile,err:=os.Open(root+string(os.PathSeparator)+name)
 				if err==nil {
-					scanner:=bufio.NewScanner(txtfile)
-					scanner.Scan()
-					head:=strings.ToLower(scanner.Text())
-					if !regexp.MustCompile("aaberg, anton").MatchString(head) {
+					name:=strings.ToLower(name)
+					fscanner:=bufio.NewScanner(txtfile)
+					fscanner.Scan()
+					head:=strings.ToLower(fscanner.Text())
+					invalid:=regexp.MustCompile("aaberg, anton").MatchString(head)
+					invalid=invalid||regexp.MustCompile("apr03").MatchString(name)
+					invalid=invalid||regexp.MustCompile("apr04").MatchString(name)
+					invalid=invalid||regexp.MustCompile("jan05").MatchString(name)
+					invalid=invalid||regexp.MustCompile("jan06").MatchString(name)
+					invalid=invalid||regexp.MustCompile("jul04").MatchString(name)
+					invalid=invalid||regexp.MustCompile("jul05").MatchString(name)
+					invalid=invalid||regexp.MustCompile("oct02").MatchString(name)
+					invalid=invalid||regexp.MustCompile("oct04").MatchString(name)
+
+
+					if !invalid {
 						headm:=regexp.MustCompile(`id number`).ReplaceAllString(head,"id_number")
 						headm=regexp.MustCompile(`^  id_number`).ReplaceAllString(headm,"id_number  ")
 						headm=regexp.MustCompile(`^   code`).ReplaceAllString(headm,"code   ")
@@ -84,12 +96,15 @@ func main() {
 							panic(err)
 						}
 						clen+=len(content)
-						limit:=0						
-						for scanner.Scan() {
-							line:=scanner.Text()							
+						rownum:=1
+						for fscanner.Scan() {
+							line:=fscanner.Text()							
 							buff:=""
 							for i:=0; i<(len(begins)-1); i++ {
-								if buff!="" {
+								if buff=="" {
+									buff+=`"`+fmt.Sprintf("%d",rownum)+`" `
+									rownum++
+								} else {
 									buff+=" "
 								}
 								var ll=begins[i+1]
@@ -97,7 +112,7 @@ func main() {
 									ll=len(line)
 								}
 								if begins[i]>=len(line) {
-									buff+=""
+									buff+=`""`
 								} else {
 									value:=line[begins[i]:ll]
 									value=regexp.MustCompile(`^ +| +$`).ReplaceAllString(value,"")
@@ -109,10 +124,9 @@ func main() {
 								panic(err)
 							}
 							clen+=len(content)
-							limit--
 						}
 						outf.Close()
-						fmt.Printf("lines %d content length %d\n",-limit,clen)
+						fmt.Printf("lines %d content length %d\n",rownum-1,clen)
 					}					
 					txtfile.Close()					
 				} else {
